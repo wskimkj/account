@@ -464,3 +464,156 @@
           });
         }
       });
+
+      // 사이트명 기준 정렬
+      results.sort((a, b) => {
+        return (a.siteName || "").localeCompare(b.siteName || "");
+      });
+
+      return results;
+    }
+
+    function renderResults(results) {
+      if (!results || results.length === 0) {
+        resultList.innerHTML = '<div class="empty">검색 결과가 없습니다.</div>';
+        resultCount.textContent = "0건";
+        return;
+      }
+
+      resultCount.textContent = results.length + "건";
+      const frag = document.createDocumentFragment();
+
+      results.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const header = document.createElement("div");
+        header.className = "card-header";
+
+        const left = document.createElement("div");
+        const siteNameEl = document.createElement("div");
+        siteNameEl.className = "site-name";
+        siteNameEl.textContent = item.siteName || "(사이트명 없음)";
+
+        const metaEl = document.createElement("div");
+        metaEl.className = "meta";
+        metaEl.textContent = ""; // 메타정보 필요하면 여기 채우기
+
+        left.appendChild(siteNameEl);
+        left.appendChild(metaEl);
+
+        const right = document.createElement("div");
+        const badge = document.createElement("span");
+        badge.className =
+          "badge-type " + (item.type === "쇼핑몰" ? "badge-shop" : "badge-other");
+        badge.textContent = item.type;
+        right.appendChild(badge);
+
+        header.appendChild(left);
+        header.appendChild(right);
+        card.appendChild(header);
+
+        if (item.storeId) {
+          card.appendChild(makeFieldRow("상점 ID", item.storeId));
+        }
+        if (item.loginId) {
+          card.appendChild(makeFieldRow("로그인 ID", item.loginId));
+        }
+        if (item.pw) {
+          card.appendChild(makeFieldRow("PW", item.pw));
+        }
+
+        frag.appendChild(card);
+      });
+
+      resultList.innerHTML = "";
+      resultList.appendChild(frag);
+    }
+
+    function makeFieldRow(label, value) {
+      const row = document.createElement("div");
+      row.className = "field-row";
+
+      const labelEl = document.createElement("div");
+      labelEl.className = "field-label";
+      labelEl.textContent = label;
+
+      const wrap = document.createElement("div");
+      wrap.className = "field-value-wrap";
+
+      const valueEl = document.createElement("div");
+      valueEl.className = "field-value";
+      valueEl.textContent = value;
+
+      const btn = document.createElement("button");
+      btn.className = "copy-btn";
+      btn.type = "button";
+      btn.textContent = "복사";
+
+      btn.addEventListener("click", function () {
+        copyToClipboard(value);
+      });
+
+      wrap.appendChild(valueEl);
+      wrap.appendChild(btn);
+
+      row.appendChild(labelEl);
+      row.appendChild(wrap);
+
+      return row;
+    }
+
+    function copyToClipboard(text) {
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showToast);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand("copy");
+          showToast();
+        } catch (e) {
+          alert("복사에 실패했습니다. 직접 선택해서 복사해주세요.");
+        }
+        document.body.removeChild(textarea);
+      }
+    }
+
+    let toastTimer = null;
+    function showToast() {
+      toast.classList.add("show");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1200);
+    }
+
+    function doSearch() {
+      if (!dataLoaded) {
+        resultList.innerHTML = '<div class="empty">아직 데이터 로딩 중입니다. 잠시 후 다시 시도해주세요.</div>';
+        return;
+      }
+      const q = queryInput.value.trim();
+      const results = searchSites(q);
+      renderResults(results);
+    }
+
+    queryInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        doSearch();
+      }
+    });
+
+    searchBtn.addEventListener("click", doSearch);
+
+    // 첫 로드시: 데이터 불러오고, 검색창 포커스
+    window.onload = () => {
+      queryInput.focus();
+      loadData();
+    };
+  </script>
+</body>
+</html>
