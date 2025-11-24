@@ -513,9 +513,15 @@
         header.appendChild(right);
         card.appendChild(header);
 
-        if (item.storeId) {
-          card.appendChild(makeFieldRow("상점 ID", item.storeId));
-        }
+      const hasStore =
+  item.storeId &&
+  item.storeId.toString().trim() !== "" &&
+  item.storeId.toString().trim() !== "-" &&
+  item.storeId.toString().trim() !== "없음";
+
+if (hasStore) {
+  card.appendChild(makeFieldRow("상점 ID", item.storeId));
+}
         if (item.loginId) {
           card.appendChild(makeFieldRow("로그인 ID", item.loginId));
         }
