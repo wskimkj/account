@@ -12,27 +12,33 @@
 
     body {
       margin: 0;
-      padding: 24px;
-      background: #f3f4f6;
+      padding: 16px;
+      background: radial-gradient(circle at top, #e5f0ff 0, #f9fafb 45%, #edf2f7 100%);
       color: #111827;
     }
 
     .app {
       max-width: 960px;
       margin: 0 auto;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      box-shadow: 0 12px 35px rgba(15, 23, 42, 0.12);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 18px 18px 16px;
     }
 
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
-      gap: 12px;
+      margin-bottom: 14px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     header h1 {
-      font-size: 20px;
+      font-size: 18px;
       margin: 0;
       display: flex;
       align-items: center;
@@ -40,46 +46,55 @@
     }
 
     header h1 span.icon {
-      font-size: 24px;
+      font-size: 22px;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 2px;
     }
 
     .badge {
-      font-size: 11px;
-      padding: 3px 9px;
+      font-size: 10px;
+      padding: 4px 10px;
       border-radius: 999px;
-      background: #eef2ff;
-      color: #4f46e5;
-      font-weight: 600;
+      background: #111827;
+      color: #e5e7eb;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
     }
 
     .search-box {
       display: flex;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       flex-wrap: nowrap;
+      align-items: center;
     }
 
     .search-box input {
       flex: 1;
-      padding: 10px 12px;
+      padding: 9px 12px;
       border-radius: 999px;
       border: 1px solid #d1d5db;
-      font-size: 14px;
+      font-size: 13px;
       outline: none;
       background: white;
     }
 
     .search-box input:focus {
       border-color: #4f46e5;
-      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18);
     }
 
     .search-box button {
-      padding: 9px 14px;
+      padding: 8px 14px;
       border-radius: 999px;
       border: none;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       background: #4f46e5;
       color: white;
@@ -93,7 +108,7 @@
     .hint {
       font-size: 11px;
       color: #6b7280;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -105,120 +120,154 @@
       align-items: center;
       padding: 2px 8px;
       border-radius: 999px;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 600;
-      background: #ecfdf3;
-      color: #16a34a;
+      background: #e0f2fe;
+      color: #0369a1;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
     .results-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
-      font-size: 12px;
+      margin-bottom: 4px;
+      font-size: 11px;
       color: #4b5563;
+    }
+
+    .results-header span.label {
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+
+    .results-header span#result-count {
+      font-size: 11px;
+      color: #6b7280;
     }
 
     .result-list {
       max-height: calc(100vh - 190px);
       overflow-y: auto;
-      padding-right: 4px;
-
-      /* 그리드 배치: 한 줄에 여러 개 */
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 10px;
+      padding-right: 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    .card {
-      background: white;
-      border-radius: 14px;
-      padding: 10px 12px;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    .row {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 8px 10px;
       border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .card-header {
+    .row-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
       gap: 8px;
-      flex-wrap: wrap;
     }
 
-    .site-name {
-      font-size: 14px;
+    .row-site {
+      font-size: 13px;
       font-weight: 600;
       color: #111827;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .meta {
-      font-size: 11px;
-      color: #6b7280;
+    .row-sub {
+      font-size: 10px;
+      color: #9ca3af;
+      margin-top: 1px;
     }
 
-    .badge-type {
+    .group-badge {
       font-size: 10px;
       padding: 3px 8px;
       border-radius: 999px;
       font-weight: 600;
+      border: 1px solid;
+      white-space: nowrap;
     }
 
-    .badge-shop {
+    .group-jh {
+      background: #eef2ff;
+      border-color: #4f46e5;
+      color: #4338ca;
+    }
+
+    .group-nh {
       background: #ecfdf5;
-      color: #16a34a;
+      border-color: #16a34a;
+      color: #15803d;
     }
 
-    .badge-other {
+    .group-hty {
       background: #fef3c7;
-      color: #d97706;
+      border-color: #d97706;
+      color: #b45309;
     }
 
-    .field-row {
+    .group-etc {
+      background: #f3f4f6;
+      border-color: #9ca3af;
+      color: #4b5563;
+    }
+
+    .row-body {
       display: flex;
+      flex-wrap: wrap;
+      gap: 4px 8px;
       align-items: center;
-      margin-top: 4px;
-      font-size: 11px;
+    }
+
+    .field-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 6px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      font-size: 10px;
+      max-width: 100%;
     }
 
     .field-label {
-      width: 70px;
+      font-size: 10px;
       color: #6b7280;
-      flex-shrink: 0;
-    }
-
-    .field-value-wrap {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      min-width: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .field-value {
-      flex: 1;
-      padding: 4px 6px;
-      border-radius: 8px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 11px;
-      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 10px;
+      color: #111827;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     .copy-btn {
       border: none;
-      border-radius: 6px;
-      padding: 4px 6px;
+      border-radius: 999px;
+      padding: 2px 6px;
       font-size: 10px;
       cursor: pointer;
       background: #eef2ff;
       color: #4f46e5;
       white-space: nowrap;
-      flex-shrink: 0;
     }
 
     .copy-btn:active {
@@ -226,9 +275,10 @@
     }
 
     .empty {
-      font-size: 13px;
+      font-size: 12px;
       color: #9ca3af;
       margin-top: 8px;
+      padding: 6px 2px;
     }
 
     .toast {
@@ -253,7 +303,10 @@
 
     @media (max-width: 600px) {
       body {
-        padding: 16px;
+        padding: 10px;
+      }
+      .app {
+        padding: 14px 12px;
       }
     }
   </style>
@@ -263,14 +316,14 @@
     <header>
       <div>
         <h1>
-          <span class="icon">🔐</span>
+          <span class="icon">🔑</span>
           <span>사이트 계정 검색</span>
         </h1>
-        <div style="font-size:11px; color:#6b7280; margin-top:4px;">
-          스프레드시트 기반 계정관리 전용 검색 툴
+        <div class="subtitle">
+          구글 시트 기반 계정 관리 · 검색 전용 뷰어
         </div>
       </div>
-      <div class="badge">내부용 · GitHub 배포</div>
+      <div class="badge">INTERNAL TOOL</div>
     </header>
 
     <div class="search-box">
@@ -279,12 +332,12 @@
     </div>
 
     <div class="hint">
-      <span class="pill">TIP</span>
-      <span>입력한 단어가 <b>포함</b>된 모든 사이트명을 찾아서 보여줘요. (완전 일치 필요 없음)</span>
+      <span class="pill">SEARCH</span>
+      <span>사이트명에 <b>포함된 단어</b>로 검색해요. (A열이 ‘매장’인 행은 자동 제외)</span>
     </div>
 
     <div class="results-header">
-      <span>검색 결과</span>
+      <span class="label">RESULTS</span>
       <span id="result-count"></span>
     </div>
 
@@ -294,337 +347,337 @@
   <div id="toast" class="toast">복사되었습니다</div>
 
   <script>
-  // -------------------------------------------------------------------
-  // 🔧 구글 시트 설정
-  // -------------------------------------------------------------------
-  const SHEET_ID = "1bdGBLki_3CVaq7BDL3u-pQDSZVBD7roeEdsyP-74Lz0";
+    // -------------------------------------------------------------------
+    // 🔧 구글 시트 설정
+    // -------------------------------------------------------------------
+    const SHEET_ID = "1bdGBLki_3CVaq7BDL3u-pQDSZVBD7roeEdsyP-74Lz0";
 
-  // 쇼핑몰 3개 시트 GID
-  const SHOP_GIDS = [
-    0,          // jh
-    618725932,  // nh
-    1481873109  // hyt
-  ];
+    // 쇼핑몰 3개 시트 GID
+    const SHOP_GIDS = [
+      0,          // jh
+      618725932,  // nh
+      1481873109  // hyt
+    ];
 
-  // 기타 사이트 시트 GID
-  const OTHER_GID = 267581891;
+    // 기타 사이트 시트 GID
+    const OTHER_GID = 267581891;
 
-  let SHOP_SITES = [];
-  let OTHER_SITES = [];
-  let dataLoaded = false;
+    let SHOP_SITES = [];
+    let OTHER_SITES = [];
+    let dataLoaded = false;
 
-  const queryInput = document.getElementById("query");
-  const searchBtn = document.getElementById("searchBtn");
-  const resultList = document.getElementById("result-list");
-  const resultCount = document.getElementById("result-count");
-  const toast = document.getElementById("toast");
+    const queryInput = document.getElementById("query");
+    const searchBtn = document.getElementById("searchBtn");
+    const resultList = document.getElementById("result-list");
+    const resultCount = document.getElementById("result-count");
+    const toast = document.getElementById("toast");
 
-  // -------------------------------------------------------------------
-  // CSV 불러오기 & 파싱
-  // -------------------------------------------------------------------
-  function csvUrl(gid) {
-    return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}`;
-  }
+    // -------------------------------------------------------------------
+    // CSV 불러오기 & 파싱
+    // -------------------------------------------------------------------
+    function csvUrl(gid) {
+      return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}`;
+    }
 
-  async function fetchCsv(gid) {
-    const res = await fetch(csvUrl(gid));
-    const text = await res.text();
-    return parseCsv(text);
-  }
+    async function fetchCsv(gid) {
+      const res = await fetch(csvUrl(gid));
+      const text = await res.text();
+      return parseCsv(text);
+    }
 
-  function parseCsv(text) {
-    const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
-    return lines.map(line => line.split(","));
-  }
+    // 단순 CSV 파서 (복잡한 따옴표 케이스는 없다고 가정)
+    function parseCsv(text) {
+      const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
+      return lines.map(line => line.split(","));
+    }
 
-  // 🔥 A열이 '매장'인 행은 "전체 행" 제거 (모든 시트 공통)
-  async function loadData() {
-    resultList.innerHTML = '<div class="empty">데이터 불러오는 중...</div>';
-    resultCount.textContent = "";
+    // 🔥 A열이 '매장'인 행은 전체 제외 (모든 시트 공통)
+    async function loadData() {
+      resultList.innerHTML = '<div class="empty">데이터 불러오는 중...</div>';
+      resultCount.textContent = "";
 
-    try {
-      // -------- 1) 쇼핑몰 3개 시트 (JH / NH / HTY) --------
-      const shopPromises = SHOP_GIDS.map(gid => fetchCsv(gid));
-      const shopSheetsRows = await Promise.all(shopPromises);
+      try {
+        // -------- 1) 쇼핑몰 3개 시트 (JH / NH / HTY) --------
+        const shopPromises = SHOP_GIDS.map(gid => fetchCsv(gid));
+        const shopSheetsRows = await Promise.all(shopPromises);
 
-      SHOP_SITES = [];
+        SHOP_SITES = [];
 
-      shopSheetsRows.forEach((rows, idx) => {
-        const gid = SHOP_GIDS[idx];
-        if (!rows || rows.length <= 1) return; // 헤더만 있거나 데이터 없음
+        shopSheetsRows.forEach((rows, idx) => {
+          const gid = SHOP_GIDS[idx];
+          if (!rows || rows.length <= 1) return;
 
-        let groupLabel = "";
-        if (gid === 0) groupLabel = "JH";
-        else if (gid === 618725932) groupLabel = "NH";
-        else if (gid === 1481873109) groupLabel = "HTY";
-        else groupLabel = "기타";
+          let groupLabel = "";
+          if (gid === 0) groupLabel = "JH";
+          else if (gid === 618725932) groupLabel = "NH";
+          else if (gid === 1481873109) groupLabel = "HTY";
+          else groupLabel = "기타";
 
-        // 0행은 헤더, 1행부터 실제 데이터
-        rows.slice(1).forEach(cols => {
-          // ✅ ➊ A열 체크 → '매장'이면 이 행 "전체"를 스킵
-          const colA = (cols[0] || "").toString().trim();
-          if (colA === "매장") {
-            return; // ← 여기서 return 하면 이 행은 아무것도 push 안 함 = 전체 행 제외
-          }
-
-          let siteName = "";
-          let storeId = "";
-          let loginId = "";
-          let pw = "";
-
-          // jh (gid = 0)
-          if (gid === 0) {
-            siteName = cols[5];   // F
-            storeId  = cols[13];  // N
-            loginId  = cols[14];  // O
-            pw       = cols[15];  // P
-          }
-          // nh (gid = 618725932)
-          else if (gid === 618725932) {
-            siteName = cols[4];   // E
-            storeId  = cols[12];  // M
-            loginId  = cols[13];  // N
-            pw       = cols[14];  // O
-          }
-          // hyt (gid = 1481873109)
-          else if (gid === 1481873109) {
-            siteName = cols[4];   // E
-            storeId  = cols[12];  // M
-            loginId  = cols[13];  // N
-            pw       = cols[14];  // O
-          }
-
-          if (!siteName) return;
-
-          SHOP_SITES.push({
-            group: groupLabel,
-            siteName: siteName || "",
-            storeId: storeId || "",
-            loginId: loginId || "",
-            pw: pw || ""
-          });
-        });
-      });
-
-      // -------- 2) 기타 시트 --------
-      OTHER_SITES = [];
-      if (OTHER_GID != null) {
-        const otherRows = await fetchCsv(OTHER_GID);
-        if (otherRows.length > 1) {
-          otherRows.slice(1).forEach(cols => {
-            // ✅ ➋ 기타 시트도 A열이 '매장'이면 행 전체 제외
+          rows.slice(1).forEach(cols => {
+            // A열 == '매장'이면 이 행 전체 제외
             const colA = (cols[0] || "").toString().trim();
-            if (colA === "매장") {
-              return;
+            if (colA === "매장") return;
+
+            let siteName = "";
+            let storeId = "";
+            let loginId = "";
+            let pw = "";
+
+            if (gid === 0) {
+              // jh: 사이트명 F, 상점 N, ID O, PW P
+              siteName = cols[5];
+              storeId  = cols[13];
+              loginId  = cols[14];
+              pw       = cols[15];
+            } else if (gid === 618725932 || gid === 1481873109) {
+              // nh/hyt: 사이트명 E, 상점 M, ID N, PW O
+              siteName = cols[4];
+              storeId  = cols[12];
+              loginId  = cols[13];
+              pw       = cols[14];
             }
 
-            const siteName = cols[0]; // A
-            const loginId  = cols[3]; // D
-            const pw       = cols[4]; // E
             if (!siteName) return;
 
-            OTHER_SITES.push({
-              group: "기타",
+            SHOP_SITES.push({
+              group: groupLabel,
               siteName: siteName || "",
+              storeId: storeId || "",
               loginId: loginId || "",
               pw: pw || ""
             });
           });
+        });
+
+        // -------- 2) 기타 시트 --------
+        OTHER_SITES = [];
+        if (OTHER_GID != null) {
+          const otherRows = await fetchCsv(OTHER_GID);
+          if (otherRows.length > 1) {
+            otherRows.slice(1).forEach(cols => {
+              const colA = (cols[0] || "").toString().trim();
+              if (colA === "매장") return;
+
+              const siteName = cols[0]; // A
+              const loginId  = cols[3]; // D
+              const pw       = cols[4]; // E
+              if (!siteName) return;
+
+              OTHER_SITES.push({
+                group: "기타",
+                siteName: siteName || "",
+                loginId: loginId || "",
+                pw: pw || ""
+              });
+            });
+          }
         }
-      }
 
-      dataLoaded = true;
-      resultList.innerHTML = '<div class="empty">검색어를 입력하고 [검색]을 눌러주세요.</div>';
-    } catch (e) {
-      console.error(e);
-      resultList.innerHTML = '<div class="empty">데이터를 불러오지 못했습니다. (시트 공개 권한 확인 필요)</div>';
-    }
-  }
-
-  // -------------------------------------------------------------------
-  // 검색 / 렌더링 (여기는 이전이랑 동일)
-  // -------------------------------------------------------------------
-  function normalize(str) {
-    return (str || "").toString().toLowerCase();
-  }
-
-  function searchSites(query) {
-    const q = normalize(query);
-    if (!q) return [];
-
-    const results = [];
-
-    SHOP_SITES.forEach(item => {
-      if (normalize(item.siteName).includes(q)) {
-        results.push({
-          group: item.group || "기타",
-          siteName: item.siteName || "",
-          storeId: item.storeId || "",
-          loginId: item.loginId || "",
-          pw: item.pw || ""
-        });
-      }
-    });
-
-    OTHER_SITES.forEach(item => {
-      if (normalize(item.siteName).includes(q)) {
-        results.push({
-          group: item.group || "기타",
-          siteName: item.siteName || "",
-          storeId: "",
-          loginId: item.loginId || "",
-          pw: item.pw || ""
-        });
-      }
-    });
-
-    results.sort((a, b) => {
-      return (a.siteName || "").localeCompare(b.siteName || "");
-    });
-
-    return results;
-  }
-
-  function renderResults(results) {
-    if (!results || results.length === 0) {
-      resultList.innerHTML = '<div class="empty">검색 결과가 없습니다.</div>';
-      resultCount.textContent = "0건";
-      return;
-    }
-
-    resultCount.textContent = results.length + "건";
-    const frag = document.createDocumentFragment();
-
-    results.forEach(item => {
-      const card = document.createElement("div");
-      card.className = "card";
-
-      const header = document.createElement("div");
-      header.className = "card-header";
-
-      const left = document.createElement("div");
-      const siteNameEl = document.createElement("div");
-      siteNameEl.className = "site-name";
-      siteNameEl.textContent = item.siteName || "(사이트명 없음)";
-
-      const metaEl = document.createElement("div");
-      metaEl.className = "meta";
-      metaEl.textContent = "";
-
-      left.appendChild(siteNameEl);
-      left.appendChild(metaEl);
-
-      const right = document.createElement("div");
-      const badge = document.createElement("span");
-      const isOther = item.group === "기타";
-      badge.className = "badge-type " + (isOther ? "badge-other" : "badge-shop");
-      badge.textContent = item.group || "기타";
-      right.appendChild(badge);
-
-      header.appendChild(left);
-      header.appendChild(right);
-      card.appendChild(header);
-
-      const store = (item.storeId || "").toString().trim();
-      const hasStore =
-        store !== "" &&
-        store !== "-" &&
-        store !== "없음";
-
-      if (hasStore) {
-        card.appendChild(makeFieldRow("상점 ID", item.storeId));
-      }
-      if (item.loginId) {
-        card.appendChild(makeFieldRow("로그인 ID", item.loginId));
-      }
-      if (item.pw) {
-        card.appendChild(makeFieldRow("PW", item.pw));
-      }
-
-      frag.appendChild(card);
-    });
-
-    resultList.innerHTML = "";
-    resultList.appendChild(frag);
-  }
-
-  function makeFieldRow(label, value) {
-    const row = document.createElement("div");
-    row.className = "field-row";
-
-    const labelEl = document.createElement("div");
-    labelEl.className = "field-label";
-    labelEl.textContent = label;
-
-    const wrap = document.createElement("div");
-    wrap.className = "field-value-wrap";
-
-    const valueEl = document.createElement("div");
-    valueEl.className = "field-value";
-    valueEl.textContent = value;
-
-    const btn = document.createElement("button");
-    btn.className = "copy-btn";
-    btn.type = "button";
-    btn.textContent = "복사";
-    btn.addEventListener("click", () => copyToClipboard(value));
-
-    wrap.appendChild(valueEl);
-    wrap.appendChild(btn);
-    row.appendChild(labelEl);
-    row.appendChild(wrap);
-
-    return row;
-  }
-
-  function copyToClipboard(text) {
-    if (!text) return;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(showToast);
-    } else {
-      const textarea = document.createElement("textarea");
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      try {
-        document.execCommand("copy");
-        showToast();
+        dataLoaded = true;
+        resultList.innerHTML = '<div class="empty">검색어를 입력하고 [검색]을 눌러주세요.</div>';
       } catch (e) {
-        alert("복사에 실패했습니다. 직접 선택해서 복사해주세요.");
+        console.error(e);
+        resultList.innerHTML = '<div class="empty">데이터를 불러오지 못했습니다. (시트 공개 권한 확인 필요)</div>';
       }
-      document.body.removeChild(textarea);
     }
-  }
 
-  let toastTimer = null;
-  function showToast() {
-    toast.classList.add("show");
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      toast.classList.remove("show");
-    }, 1200);
-  }
-
-  function doSearch() {
-    if (!dataLoaded) {
-      resultList.innerHTML = '<div class="empty">아직 데이터 로딩 중입니다. 잠시 후 다시 시도해주세요.</div>';
-      return;
+    // -------------------------------------------------------------------
+    // 검색 로직 (사이트명 기준 포함 검색)
+    // -------------------------------------------------------------------
+    function normalize(str) {
+      return (str || "").toString().toLowerCase();
     }
-    const q = queryInput.value.trim();
-    const results = searchSites(q);
-    renderResults(results);
-  }
 
-  queryInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") doSearch();
-  });
-  searchBtn.addEventListener("click", doSearch);
+    function searchSites(query) {
+      const q = normalize(query);
+      if (!q) return [];
 
-  window.onload = () => {
-    queryInput.focus();
-    loadData();
-  };
-</script>
+      const results = [];
 
+      SHOP_SITES.forEach(item => {
+        if (normalize(item.siteName).includes(q)) {
+          results.push({
+            group: item.group || "기타",
+            siteName: item.siteName || "",
+            storeId: item.storeId || "",
+            loginId: item.loginId || "",
+            pw: item.pw || ""
+          });
+        }
+      });
+
+      OTHER_SITES.forEach(item => {
+        if (normalize(item.siteName).includes(q)) {
+          results.push({
+            group: item.group || "기타",
+            siteName: item.siteName || "",
+            storeId: "",
+            loginId: item.loginId || "",
+            pw: item.pw || ""
+          });
+        }
+      });
+
+      results.sort((a, b) => {
+        return (a.siteName || "").localeCompare(b.siteName || "");
+      });
+
+      return results;
+    }
+
+    // -------------------------------------------------------------------
+    // 렌더링 (새 UI 스타일)
+    // -------------------------------------------------------------------
+    function renderResults(results) {
+      if (!results || results.length === 0) {
+        resultList.innerHTML = '<div class="empty">검색 결과가 없습니다.</div>';
+        resultCount.textContent = "0건";
+        return;
+      }
+
+      resultCount.textContent = results.length + "건";
+      const frag = document.createDocumentFragment();
+
+      results.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "row";
+
+        // 헤더
+        const header = document.createElement("div");
+        header.className = "row-header";
+
+        const left = document.createElement("div");
+        const siteEl = document.createElement("div");
+        siteEl.className = "row-site";
+        siteEl.textContent = item.siteName || "(사이트명 없음)";
+
+        const subEl = document.createElement("div");
+        subEl.className = "row-sub";
+        subEl.textContent = ""; // 필요하면 부가 정보
+
+        left.appendChild(siteEl);
+        left.appendChild(subEl);
+
+        const right = document.createElement("div");
+        const group = (item.group || "기타").toUpperCase();
+        const badge = document.createElement("span");
+        badge.className = "group-badge " + (
+          group === "JH" ? "group-jh" :
+          group === "NH" ? "group-nh" :
+          group === "HTY" ? "group-hty" :
+          "group-etc"
+        );
+        badge.textContent = group;
+        right.appendChild(badge);
+
+        header.appendChild(left);
+        header.appendChild(right);
+        row.appendChild(header);
+
+        // 바디 (상점 / ID / PW 한 줄씩 칩 형태)
+        const body = document.createElement("div");
+        body.className = "row-body";
+
+        const store = (item.storeId || "").toString().trim();
+        const hasStore =
+          store !== "" &&
+          store !== "-" &&
+          store !== "없음";
+
+        if (hasStore) {
+          body.appendChild(makeFieldChip("상점", item.storeId));
+        }
+        if (item.loginId) {
+          body.appendChild(makeFieldChip("ID", item.loginId));
+        }
+        if (item.pw) {
+          body.appendChild(makeFieldChip("PW", item.pw));
+        }
+
+        row.appendChild(body);
+        frag.appendChild(row);
+      });
+
+      resultList.innerHTML = "";
+      resultList.appendChild(frag);
+    }
+
+    function makeFieldChip(label, value) {
+      const chip = document.createElement("div");
+      chip.className = "field-chip";
+
+      const labelEl = document.createElement("div");
+      labelEl.className = "field-label";
+      labelEl.textContent = label;
+
+      const valueEl = document.createElement("div");
+      valueEl.className = "field-value";
+      valueEl.textContent = value;
+
+      const btn = document.createElement("button");
+      btn.className = "copy-btn";
+      btn.type = "button";
+      btn.textContent = "복사";
+      btn.addEventListener("click", () => copyToClipboard(value));
+
+      chip.appendChild(labelEl);
+      chip.appendChild(valueEl);
+      chip.appendChild(btn);
+
+      return chip;
+    }
+
+    function copyToClipboard(text) {
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showToast);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand("copy");
+          showToast();
+        } catch (e) {
+          alert("복사에 실패했습니다. 직접 선택해서 복사해주세요.");
+        }
+        document.body.removeChild(textarea);
+      }
+    }
+
+    let toastTimer = null;
+    function showToast() {
+      toast.classList.add("show");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1200);
+    }
+
+    function doSearch() {
+      if (!dataLoaded) {
+        resultList.innerHTML = '<div class="empty">아직 데이터 로딩 중입니다. 잠시 후 다시 시도해주세요.</div>';
+        resultCount.textContent = "";
+        return;
+      }
+      const q = queryInput.value.trim();
+      const results = searchSites(q);
+      renderResults(results);
+    }
+
+    queryInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        doSearch();
+      }
+    });
+
+    searchBtn.addEventListener("click", doSearch);
+
+    window.onload = () => {
+      queryInput.focus();
+      loadData();
+    };
+  </script>
 </body>
 </html>
