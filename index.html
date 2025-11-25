@@ -125,7 +125,7 @@
       overflow-y: auto;
       padding-right: 4px;
 
-      /* 그리드 배치: 한 줄에 2~3개씩 */
+      /* 그리드 배치: 한 줄에 여러 개 */
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 10px;
@@ -301,12 +301,12 @@
 
     // 쇼핑몰 3개 시트 GID
     const SHOP_GIDS = [
-      0,          // jh 시트
-      618725932,  // nh 시트
-      1481873109  // hyt 시트
+      0,          // jh
+      618725932,  // nh
+      1481873109  // hyt
     ];
 
-    // 기타 사이트 시트 GID (쓰면 되고, 안 쓰면 null)
+    // 기타 사이트 시트 GID (원하면 사용)
     const OTHER_GID = 267581891;
 
     // 메모리 상 데이터
@@ -333,13 +333,13 @@
       return parseCsv(text);
     }
 
-    // 단순 CSV 파서 (큰따옴표/콤마 복잡 케이스는 없다고 가정)
+    // 매우 단순한 CSV 파서 (큰따옴표/콤마 복잡 케이스는 없다고 가정)
     function parseCsv(text) {
       const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
       return lines.map(line => line.split(","));
     }
 
-    // 🔥 시트별 컬럼 매핑 반영한 데이터 로딩
+    // 🔥 시트별 컬럼 매핑 + A열 "매장" 필터 적용
     async function loadData() {
       resultList.innerHTML = '<div class="empty">데이터 불러오는 중...</div>';
       resultCount.textContent = "";
@@ -355,8 +355,18 @@
           const gid = SHOP_GIDS[idx];
           if (!rows || rows.length <= 1) return; // 헤더만 있거나 데이터 없음
 
+          let groupLabel = "";
+          if (gid === 0) groupLabel = "JH";
+          else if (gid === 618725932) groupLabel = "NH";
+          else if (gid === 1481873109) groupLabel = "HTY";
+          else groupLabel = "기타";
+
           // 첫 행은 헤더라고 가정
           rows.slice(1).forEach(cols => {
+            // A열이 "매장"이면 이 행은 통째로 스킵
+            const colA = (cols[0] || "").toString().trim();
+            if (colA === "매장") return;
+
             let siteName = "";
             let storeId = "";
             let loginId = "";
@@ -390,6 +400,7 @@
             if (!siteName) return;
 
             SHOP_SITES.push({
+              group: groupLabel,          // JH / NH / HTY
               siteName: siteName || "",
               storeId: storeId || "",
               loginId: loginId || "",
@@ -404,12 +415,17 @@
           const otherRows = await fetchCsv(OTHER_GID);
           if (otherRows.length > 1) {
             otherRows.slice(1).forEach(cols => {
+              // A열이 "매장"이면 제외 (혹시 있을 경우)
+              const colA = (cols[0] || "").toString().trim();
+              if (colA === "매장") return;
+
               const siteName = cols[0]; // A열
               const loginId  = cols[3]; // D열
               const pw       = cols[4]; // E열
               if (!siteName) return;
 
               OTHER_SITES.push({
+                group: "기타",
                 siteName: siteName || "",
                 loginId: loginId || "",
                 pw: pw || ""
@@ -439,11 +455,11 @@
 
       const results = [];
 
-      // 쇼핑몰
+      // 쇼핑몰 (JH/NH/HTY)
       SHOP_SITES.forEach(item => {
         if (normalize(item.siteName).includes(q)) {
           results.push({
-            type: "쇼핑몰",
+            group: item.group || "기타",
             siteName: item.siteName || "",
             storeId: item.storeId || "",
             loginId: item.loginId || "",
@@ -456,7 +472,7 @@
       OTHER_SITES.forEach(item => {
         if (normalize(item.siteName).includes(q)) {
           results.push({
-            type: "기타",
+            group: item.group || "기타",
             siteName: item.siteName || "",
             storeId: "",
             loginId: item.loginId || "",
@@ -497,31 +513,32 @@
 
         const metaEl = document.createElement("div");
         metaEl.className = "meta";
-        metaEl.textContent = ""; // 메타정보 필요하면 여기 채우기
+        metaEl.textContent = ""; // 필요하면 여기에 부가정보
 
         left.appendChild(siteNameEl);
         left.appendChild(metaEl);
 
         const right = document.createElement("div");
         const badge = document.createElement("span");
-        badge.className =
-          "badge-type " + (item.type === "쇼핑몰" ? "badge-shop" : "badge-other");
-        badge.textContent = item.type;
+        const isOther = item.group === "기타";
+        badge.className = "badge-type " + (isOther ? "badge-other" : "badge-shop");
+        badge.textContent = item.group || "기타";
         right.appendChild(badge);
 
         header.appendChild(left);
         header.appendChild(right);
         card.appendChild(header);
 
-      const hasStore =
-  item.storeId &&
-  item.storeId.toString().trim() !== "" &&
-  item.storeId.toString().trim() !== "-" &&
-  item.storeId.toString().trim() !== "없음";
+        // 상점 ID 노출 조건: 값이 있고, 공백/"-"/"없음"이 아닌 경우
+        const store = (item.storeId || "").toString().trim();
+        const hasStore =
+          store !== "" &&
+          store !== "-" &&
+          store !== "없음";
 
-if (hasStore) {
-  card.appendChild(makeFieldRow("상점 ID", item.storeId));
-}
+        if (hasStore) {
+          card.appendChild(makeFieldRow("상점 ID", item.storeId));
+        }
         if (item.loginId) {
           card.appendChild(makeFieldRow("로그인 ID", item.loginId));
         }
