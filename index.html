@@ -34,7 +34,7 @@
       padding: 20px 22px 18px;
     }
 
-    /* 헤더 영역 */
+    /* 헤더 */
     header {
       display: flex;
       align-items: center;
@@ -186,17 +186,17 @@
       color: #4b5563;
     }
 
-    /* 결과 리스트 - 애플식 리스트 뷰 */
+    /* ✅ 결과 리스트 - 4열 카드 그리드 */
     .result-list {
       max-height: calc(100vh - 220px);
       overflow-y: auto;
-      padding-right: 2px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      padding-right: 4px;
+
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
     }
 
-    /* 얇은 스크롤 */
     .result-list::-webkit-scrollbar {
       width: 6px;
     }
@@ -208,15 +208,15 @@
       border-radius: 999px;
     }
 
+    /* 카드 하나 */
     .row {
       background: #f9fafb;
-      border-radius: 12px;
-      padding: 8px 10px;
+      border-radius: 14px;
+      padding: 10px 11px;
       border: 1px solid #e5e7eb;
-      display: grid;
-      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1.1fr);
-      gap: 6px 10px;
-      align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
       font-size: 11px;
       transition: box-shadow 0.12s ease, transform 0.08s ease, border-color 0.12s ease,
         background 0.12s ease;
@@ -229,15 +229,17 @@
       background: #ffffff;
     }
 
-    .row-inner {
-      display: contents;
+    .row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
     }
 
     .row-main {
       display: flex;
       flex-direction: column;
       gap: 2px;
-      padding-right: 4px;
     }
 
     .row-site {
@@ -253,10 +255,6 @@
     .row-sub {
       font-size: 10px;
       color: #9ca3af;
-    }
-
-    .row-group {
-      justify-self: flex-start;
     }
 
     .group-badge {
@@ -293,7 +291,12 @@
       background: #f3f4f6;
     }
 
-    /* 칩 (상점 / ID / PW) */
+    .row-body {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 6px;
+    }
+
     .field-chip {
       display: inline-flex;
       align-items: center;
@@ -317,7 +320,7 @@
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 10px;
       color: #111827;
-      max-width: 130px;
+      max-width: 120px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -348,6 +351,7 @@
       color: #9ca3af;
       margin-top: 8px;
       padding: 8px 4px;
+      grid-column: 1 / -1;
     }
 
     .toast {
@@ -371,18 +375,22 @@
       transform: translateX(-50%) translateY(-2px);
     }
 
+    /* 반응형: 화면 줄어들면 4 → 3 → 2 → 1열 */
+    @media (max-width: 960px) {
+      .result-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 720px) {
       .app {
         padding: 16px 14px 14px;
       }
-
       header h1 {
         font-size: 17px;
       }
-
-      .row {
-        grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
-        grid-auto-rows: auto;
+      .result-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -390,9 +398,8 @@
       body {
         padding: 12px 8px;
       }
-
-      .row {
-        grid-template-columns: minmax(0, 1fr);
+      .result-list {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
       }
     }
   </style>
@@ -620,7 +627,7 @@
     }
 
     // -------------------------------------------------------------------
-    // 렌더링 (리스트형 레이아웃)
+    // 렌더링 (4열 카드형)
     // -------------------------------------------------------------------
     function renderResults(results) {
       if (!results || results.length === 0) {
@@ -636,24 +643,25 @@
         const row = document.createElement("div");
         row.className = "row";
 
-        const inner = document.createElement("div");
-        inner.className = "row-inner";
+        // 상단: 사이트명 + 그룹
+        const header = document.createElement("div");
+        header.className = "row-header";
 
-        // 메인 (사이트명)
         const main = document.createElement("div");
         main.className = "row-main";
+
         const siteEl = document.createElement("div");
         siteEl.className = "row-site";
         siteEl.textContent = item.siteName || "(사이트명 없음)";
+
         const subEl = document.createElement("div");
         subEl.className = "row-sub";
         subEl.textContent = ""; // 필요하면 부가 정보
+
         main.appendChild(siteEl);
         main.appendChild(subEl);
 
-        // 그룹 배지
         const groupWrap = document.createElement("div");
-        groupWrap.className = "row-group";
         const group = (item.group || "기타").toUpperCase();
         const badge = document.createElement("span");
         badge.className =
@@ -668,31 +676,28 @@
         badge.textContent = group;
         groupWrap.appendChild(badge);
 
-        // 상점 / ID / PW 칩
+        header.appendChild(main);
+        header.appendChild(groupWrap);
+        row.appendChild(header);
+
+        // 하단: 상점 / ID / PW
+        const body = document.createElement("div");
+        body.className = "row-body";
+
         const store = (item.storeId || "").toString().trim();
         const hasStore = store !== "" && store !== "-" && store !== "없음";
 
-        const storeCell = document.createElement("div");
-        const idCell = document.createElement("div");
-        const pwCell = document.createElement("div");
-
         if (hasStore) {
-          storeCell.appendChild(makeFieldChip("상점", item.storeId));
+          body.appendChild(makeFieldChip("상점", item.storeId));
         }
         if (item.loginId) {
-          idCell.appendChild(makeFieldChip("ID", item.loginId));
+          body.appendChild(makeFieldChip("ID", item.loginId));
         }
         if (item.pw) {
-          pwCell.appendChild(makeFieldChip("PW", item.pw));
+          body.appendChild(makeFieldChip("PW", item.pw));
         }
 
-        inner.appendChild(main);
-        inner.appendChild(groupWrap);
-        inner.appendChild(storeCell);
-        inner.appendChild(idCell);
-        inner.appendChild(pwCell);
-
-        row.appendChild(inner);
+        row.appendChild(body);
         frag.appendChild(row);
       });
 
