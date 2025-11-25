@@ -149,14 +149,16 @@
       color: #6b7280;
     }
 
-    .result-list {
-      max-height: calc(100vh - 190px);
-      overflow-y: auto;
-      padding-right: 2px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+  .result-list {
+  max-height: calc(100vh - 190px);
+  overflow-y: auto;
+  padding-right: 4px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 🔥 4열 고정 */
+  gap: 10px; /* 카드 간 간격 */
+}
+
 
     .row {
       background: #f9fafb;
