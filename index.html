@@ -2,8 +2,11 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>사이트 계정 검색</title>
+  <title>사이트 계정 검색 - 리스트형 뷰어</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="icon" type="image/x-icon" href="account.ico" />
+  
   <style>
     * {
       box-sizing: border-box;
@@ -13,19 +16,19 @@
     body {
       margin: 0;
       padding: 16px;
-      background: radial-gradient(circle at top, #e5f0ff 0, #f9fafb 45%, #edf2f7 100%);
+      background: #0f172a;
       color: #111827;
     }
 
     .app {
-      max-width: 960px;
+      max-width: 1120px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
+      background: radial-gradient(circle at top left, #1d2537 0, #020617 40%, #020617 100%);
       border-radius: 18px;
-      box-shadow: 0 12px 35px rgba(15, 23, 42, 0.12);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      padding: 18px 18px 16px;
+      padding: 16px 16px 14px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      color: #e5e7eb;
     }
 
     header {
@@ -51,7 +54,7 @@
 
     .subtitle {
       font-size: 11px;
-      color: #6b7280;
+      color: #9ca3af;
       margin-top: 2px;
     }
 
@@ -59,60 +62,109 @@
       font-size: 10px;
       padding: 4px 10px;
       border-radius: 999px;
-      background: #111827;
+      background: rgba(15, 23, 42, 0.9);
       color: #e5e7eb;
       font-weight: 500;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    /* 메인 레이아웃: 좌측 패널 / 우측 결과 */
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .panel-left {
+      border-radius: 14px;
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.45), rgba(15, 23, 42, 0.95));
+      padding: 12px 11px 10px;
+      border: 1px solid rgba(129, 140, 248, 0.6);
+      box-shadow: 0 12px 30px rgba(30, 64, 175, 0.35);
+    }
+
+    .panel-left-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .panel-left-title small {
+      font-size: 10px;
+      color: #cbd5f5;
     }
 
     .search-box {
       display: flex;
-      gap: 8px;
-      margin-bottom: 6px;
-      flex-wrap: nowrap;
+      gap: 6px;
+      margin-bottom: 8px;
       align-items: center;
     }
 
     .search-box input {
       flex: 1;
-      padding: 9px 12px;
+      padding: 8px 10px;
       border-radius: 999px;
-      border: 1px solid #d1d5db;
+      border: 1px solid rgba(191, 219, 254, 0.8);
       font-size: 13px;
       outline: none;
-      background: white;
+      background: rgba(15, 23, 42, 0.3);
+      color: #e5e7eb;
+    }
+
+    .search-box input::placeholder {
+      color: #64748b;
     }
 
     .search-box input:focus {
-      border-color: #4f46e5;
-      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18);
+      border-color: #e5e7eb;
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.65);
     }
 
     .search-box button {
-      padding: 8px 14px;
+      padding: 7px 12px;
       border-radius: 999px;
       border: none;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      background: #4f46e5;
-      color: white;
+      background: #e5e7eb;
+      color: #111827;
       white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
     }
 
     .search-box button:active {
       transform: translateY(1px);
+      box-shadow: 0 2px 7px rgba(15, 23, 42, 0.5);
     }
 
     .hint {
       font-size: 11px;
-      color: #6b7280;
+      color: #cbd5f5;
       margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hint-main {
       display: flex;
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
+    }
+
+    .hint-sub {
+      font-size: 10px;
+      color: #9ca3af;
     }
 
     .pill {
@@ -122,65 +174,118 @@
       border-radius: 999px;
       font-size: 9px;
       font-weight: 600;
-      background: #e0f2fe;
-      color: #0369a1;
+      background: rgba(15, 23, 42, 0.9);
+      color: #bfdbfe;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(191, 219, 254, 0.9);
+    }
+
+    .mini-tip {
+      font-size: 10px;
+      color: #e5e7eb;
+      opacity: 0.9;
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+
+    .mini-tip b {
+      color: #fbbf24;
+      font-weight: 600;
+    }
+
+    /* 우측 결과 패널 */
+    .panel-right {
+      background: rgba(15, 23, 42, 0.98);
+      border-radius: 14px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 10px 10px 8px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
     }
 
     .results-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       font-size: 11px;
-      color: #4b5563;
+      color: #9ca3af;
     }
 
     .results-header span.label {
       font-weight: 600;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       font-size: 10px;
+      color: #f9fafb;
     }
 
     .results-header span#result-count {
       font-size: 11px;
-      color: #6b7280;
+      color: #e5e7eb;
     }
 
-  .result-list {
-  max-height: calc(100vh - 190px);
-  overflow-y: auto;
-  padding-right: 4px;
-
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 🔥 4열 고정 */
-  gap: 10px; /* 카드 간 간격 */
-}
-
-
-    .row {
-      background: #f9fafb;
-      border-radius: 10px;
-      padding: 8px 10px;
-      border: 1px solid #e5e7eb;
+    .result-list {
+      max-height: calc(100vh - 210px);
+      overflow-y: auto;
+      padding-right: 2px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
-    .row-header {
-      display: flex;
-      justify-content: space-between;
+    /* 스크롤바 살짝만 */
+    .result-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .result-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .result-list::-webkit-scrollbar-thumb {
+      background: #4b5563;
+      border-radius: 999px;
+    }
+
+    .row {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 8px;
+      padding: 7px 8px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 6px;
       align-items: center;
-      gap: 8px;
+      font-size: 11px;
+    }
+
+    /* 그룹별 왼쪽 강조선 */
+    .row::before {
+      content: "";
+      grid-row: 1 / -1;
+      width: 3px;
+      border-radius: 999px;
+      background: #4b5563;
+      margin-right: 4px;
+    }
+
+    .row-inner {
+      display: contents;
+    }
+
+    .row-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-left: 2px;
     }
 
     .row-site {
       font-size: 13px;
       font-weight: 600;
-      color: #111827;
+      color: #f9fafb;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -188,8 +293,11 @@
 
     .row-sub {
       font-size: 10px;
-      color: #9ca3af;
-      margin-top: 1px;
+      color: #6b7280;
+    }
+
+    .row-group {
+      justify-self: flex-start;
     }
 
     .group-badge {
@@ -202,59 +310,53 @@
     }
 
     .group-jh {
-      background: #eef2ff;
-      border-color: #4f46e5;
-      color: #4338ca;
+      background: rgba(129, 140, 248, 0.12);
+      border-color: rgba(129, 140, 248, 0.9);
+      color: #c7d2fe;
     }
 
     .group-nh {
-      background: #ecfdf5;
-      border-color: #16a34a;
-      color: #15803d;
+      background: rgba(34, 197, 94, 0.12);
+      border-color: rgba(34, 197, 94, 0.9);
+      color: #bbf7d0;
     }
 
     .group-hty {
-      background: #fef3c7;
-      border-color: #d97706;
-      color: #b45309;
+      background: rgba(249, 115, 22, 0.12);
+      border-color: rgba(249, 115, 22, 0.9);
+      color: #fed7aa;
     }
 
     .group-etc {
-      background: #f3f4f6;
-      border-color: #9ca3af;
-      color: #4b5563;
+      background: rgba(148, 163, 184, 0.12);
+      border-color: rgba(148, 163, 184, 0.85);
+      color: #e5e7eb;
     }
 
-    .row-body {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 8px;
-      align-items: center;
-    }
-
+    /* 칩 스타일: 상점 / ID / PW */
     .field-chip {
       display: inline-flex;
       align-items: center;
       gap: 4px;
       padding: 3px 6px;
       border-radius: 999px;
-      background: #fff;
-      border: 1px solid #e5e7eb;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(55, 65, 81, 0.9);
       font-size: 10px;
       max-width: 100%;
     }
 
     .field-label {
-      font-size: 10px;
-      color: #6b7280;
+      font-size: 9px;
+      color: #9ca3af;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.06em;
     }
 
     .field-value {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 10px;
-      color: #111827;
+      color: #e5e7eb;
       max-width: 120px;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -264,11 +366,11 @@
     .copy-btn {
       border: none;
       border-radius: 999px;
-      padding: 2px 6px;
+      padding: 1px 6px;
       font-size: 10px;
       cursor: pointer;
-      background: #eef2ff;
-      color: #4f46e5;
+      background: #e5e7eb;
+      color: #111827;
       white-space: nowrap;
     }
 
@@ -278,9 +380,9 @@
 
     .empty {
       font-size: 12px;
-      color: #9ca3af;
+      color: #6b7280;
       margin-top: 8px;
-      padding: 6px 2px;
+      padding: 6px 4px;
     }
 
     .toast {
@@ -303,12 +405,29 @@
       opacity: 1;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .panel-left {
+        order: 1;
+      }
+      .panel-right {
+        order: 2;
+      }
+    }
+
+    @media (max-width: 640px) {
       body {
         padding: 10px;
       }
       .app {
-        padding: 14px 12px;
+        padding: 12px;
+      }
+      .row {
+        grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+        grid-auto-rows: auto;
+        row-gap: 4px;
       }
     }
   </style>
@@ -322,28 +441,49 @@
           <span>사이트 계정 검색</span>
         </h1>
         <div class="subtitle">
-          구글 시트 기반 계정 관리 · 검색 전용 뷰어
+          구글 시트 기반 계정 관리 · 빠른 검색용 리스트 뷰어
         </div>
       </div>
       <div class="badge">INTERNAL TOOL</div>
     </header>
 
-    <div class="search-box">
-      <input id="query" type="text" placeholder="사이트명 일부만 입력해도 돼요. 예) 스토어, 자사몰, 관리자" />
-      <button id="searchBtn">검색</button>
-    </div>
+    <div class="layout">
+      <!-- 왼쪽 검색 패널 -->
+      <section class="panel-left">
+        <div class="panel-left-title">
+          <span>검색</span>
+          <small>Enter / 클릭으로 실행</small>
+        </div>
 
-    <div class="hint">
-      <span class="pill">SEARCH</span>
-      <span>사이트명에 <b>포함된 단어</b>로 검색해요. (A열이 ‘매장’인 행은 자동 제외)</span>
-    </div>
+        <div class="search-box">
+          <input id="query" type="text" placeholder="사이트명 일부만 입력해도 돼요. 예) 자사몰, 관리자" />
+          <button id="searchBtn">검색</button>
+        </div>
 
-    <div class="results-header">
-      <span class="label">RESULTS</span>
-      <span id="result-count"></span>
-    </div>
+        <div class="hint">
+          <div class="hint-main">
+            <span class="pill">SEARCH</span>
+            <span>사이트명에 <b>포함된 단어</b>로 검색해요.</span>
+          </div>
+          <div class="hint-sub">
+            A열이 <b>‘매장’</b>인 행은 모두 자동 제외됩니다.
+          </div>
+          <div class="mini-tip">
+            자주 쓰는 키워드 예시: <b>스토어</b>, <b>관리자</b>, <b>자사몰</b>, <b>CS</b> ...
+          </div>
+        </div>
+      </section>
 
-    <div id="result-list" class="result-list"></div>
+      <!-- 오른쪽 결과 패널 -->
+      <section class="panel-right">
+        <div class="results-header">
+          <span class="label">RESULTS</span>
+          <span id="result-count"></span>
+        </div>
+
+        <div id="result-list" class="result-list"></div>
+      </section>
+    </div>
   </div>
 
   <div id="toast" class="toast">복사되었습니다</div>
@@ -476,7 +616,7 @@
         }
 
         dataLoaded = true;
-        resultList.innerHTML = '<div class="empty">검색어를 입력하고 [검색]을 눌러주세요.</div>';
+        resultList.innerHTML = '<div class="empty">검색어를 입력하고 [검색] 또는 Enter를 눌러주세요.</div>';
       } catch (e) {
         console.error(e);
         resultList.innerHTML = '<div class="empty">데이터를 불러오지 못했습니다. (시트 공개 권한 확인 필요)</div>';
@@ -528,7 +668,7 @@
     }
 
     // -------------------------------------------------------------------
-    // 렌더링 (새 UI 스타일)
+    // 렌더링 (리스트형 레이아웃)
     // -------------------------------------------------------------------
     function renderResults(results) {
       if (!results || results.length === 0) {
@@ -544,59 +684,63 @@
         const row = document.createElement("div");
         row.className = "row";
 
-        // 헤더
-        const header = document.createElement("div");
-        header.className = "row-header";
+        const inner = document.createElement("div");
+        inner.className = "row-inner";
 
-        const left = document.createElement("div");
+        // 메인 (사이트명)
+        const main = document.createElement("div");
+        main.className = "row-main";
         const siteEl = document.createElement("div");
         siteEl.className = "row-site";
         siteEl.textContent = item.siteName || "(사이트명 없음)";
-
         const subEl = document.createElement("div");
         subEl.className = "row-sub";
         subEl.textContent = ""; // 필요하면 부가 정보
+        main.appendChild(siteEl);
+        main.appendChild(subEl);
 
-        left.appendChild(siteEl);
-        left.appendChild(subEl);
-
-        const right = document.createElement("div");
+        // 그룹 배지
+        const groupWrap = document.createElement("div");
+        groupWrap.className = "row-group";
         const group = (item.group || "기타").toUpperCase();
         const badge = document.createElement("span");
-        badge.className = "group-badge " + (
-          group === "JH" ? "group-jh" :
-          group === "NH" ? "group-nh" :
-          group === "HTY" ? "group-hty" :
-          "group-etc"
-        );
+        badge.className =
+          "group-badge " +
+          (group === "JH"
+            ? "group-jh"
+            : group === "NH"
+            ? "group-nh"
+            : group === "HTY"
+            ? "group-hty"
+            : "group-etc");
         badge.textContent = group;
-        right.appendChild(badge);
+        groupWrap.appendChild(badge);
 
-        header.appendChild(left);
-        header.appendChild(right);
-        row.appendChild(header);
-
-        // 바디 (상점 / ID / PW 한 줄씩 칩 형태)
-        const body = document.createElement("div");
-        body.className = "row-body";
-
+        // 상점 / ID / PW 칩
         const store = (item.storeId || "").toString().trim();
-        const hasStore =
-          store !== "" &&
-          store !== "-" &&
-          store !== "없음";
+        const hasStore = store !== "" && store !== "-" && store !== "없음";
+
+        const storeCell = document.createElement("div");
+        const idCell = document.createElement("div");
+        const pwCell = document.createElement("div");
 
         if (hasStore) {
-          body.appendChild(makeFieldChip("상점", item.storeId));
+          storeCell.appendChild(makeFieldChip("상점", item.storeId));
         }
         if (item.loginId) {
-          body.appendChild(makeFieldChip("ID", item.loginId));
+          idCell.appendChild(makeFieldChip("ID", item.loginId));
         }
         if (item.pw) {
-          body.appendChild(makeFieldChip("PW", item.pw));
+          pwCell.appendChild(makeFieldChip("PW", item.pw));
         }
 
-        row.appendChild(body);
+        inner.appendChild(main);
+        inner.appendChild(groupWrap);
+        inner.appendChild(storeCell);
+        inner.appendChild(idCell);
+        inner.appendChild(pwCell);
+
+        row.appendChild(inner);
         frag.appendChild(row);
       });
 
