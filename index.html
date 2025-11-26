@@ -503,51 +503,52 @@
 
         SHOP_SITES = [];
 
-        shopSheetsRows.forEach((rows, idx) => {
-          const gid = SHOP_GIDS[idx];
-          if (!rows || rows.length <= 1) return;
+shopSheetsRows.forEach((rows, idx) => {
+  const gid = SHOP_GIDS[idx];
+  if (!rows || rows.length <= 1) return;
 
-          let groupLabel = "";
-          if (gid === 0) groupLabel = "JH";
-          else if (gid === 618725932) groupLabel = "NH";
-          else if (gid === 1481873109) groupLabel = "HTY";
-          else groupLabel = "기타";
+  let groupLabel = "";
+  if (gid === 0) groupLabel = "JH";
+  else if (gid === 618725932) groupLabel = "NH";
+  else if (gid === 1481873109) groupLabel = "HTY";
+  else groupLabel = "기타";
 
-          rows.slice(1).forEach(cols => {
-            // A열 == '매장'이면 이 행 전체 제외
-            const colA = (cols[0] || "").toString().trim();
-            if (colA === "매장") return;
+  rows.slice(1).forEach(cols => {
+    // A열 == '매장'이면 이 행 전체 제외
+    const colA = (cols[0] || "").toString().trim();
+    if (colA === "매장") return;
 
-            let siteName = "";
-            let storeId = "";
-            let loginId = "";
-            let pw = "";
+    let siteName = "";
+    let storeId = "";
+    let loginId = "";
+    let pw = "";
 
-            if (gid === 0) {
-              // jh: 사이트명 F, 상점 N, ID O, PW P
-              siteName = cols[5];
-              storeId  = cols[13];
-              loginId  = cols[14];
-              pw       = cols[15];
-            } else if (gid === 618725932 || gid === 1481873109) {
-              // nh/hyt: 사이트명 E, 상점 M, ID N, PW O
-              siteName = cols[4];
-              storeId  = cols[12];
-              loginId  = cols[13];
-              pw       = cols[14];
-            }
+    // 🔁 공통: 사이트명은 AG열 사용 (index 32)
+    siteName = cols[32];
 
-            if (!siteName) return;
+    if (gid === 0) {
+      // jh: 사이트명 AG, 상점 N, ID O, PW P
+      storeId  = cols[13];
+      loginId  = cols[14];
+      pw       = cols[15];
+    } else if (gid === 618725932 || gid === 1481873109) {
+      // nh/hyt: 사이트명 AG, 상점 M, ID N, PW O
+      storeId  = cols[12];
+      loginId  = cols[13];
+      pw       = cols[14];
+    }
 
-            SHOP_SITES.push({
-              group: groupLabel,
-              siteName: siteName || "",
-              storeId: storeId || "",
-              loginId: loginId || "",
-              pw: pw || ""
-            });
-          });
-        });
+    if (!siteName) return;
+
+    SHOP_SITES.push({
+      group: groupLabel,
+      siteName: siteName || "",
+      storeId: storeId || "",
+      loginId: loginId || "",
+      pw: pw || ""
+    });
+  });
+});
 
         // -------- 2) 기타 시트 --------
         OTHER_SITES = [];
