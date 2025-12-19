@@ -5,7 +5,6 @@
   <title>계정 조회 · Account Finder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- 파비콘 -->
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
   <style>
@@ -44,7 +43,6 @@
       max-height: calc(100vh - 48px);
     }
 
-    /* 헤더 */
     header {
       display: flex;
       align-items: center;
@@ -88,10 +86,7 @@
       white-space: nowrap;
     }
 
-    /* 검색 영역 */
-    .search-section {
-      margin-bottom: 4px;
-    }
+    .search-section { margin-bottom: 4px; }
 
     .search-box {
       display: flex;
@@ -109,10 +104,6 @@
       outline: none;
       background: #f9fafb;
       transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s, transform 0.05s;
-    }
-
-    .search-box input::placeholder {
-      color: #9ca3af;
     }
 
     .search-box input:focus {
@@ -138,16 +129,6 @@
       transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.1s ease;
     }
 
-    .search-box button:hover {
-      opacity: 0.96;
-      transform: translateY(-0.5px);
-    }
-
-    .search-box button:active {
-      transform: translateY(1px);
-      box-shadow: 0 5px 14px rgba(129, 140, 248, 0.6);
-    }
-
     .hint {
       font-size: 11px;
       color: #6b7280;
@@ -171,12 +152,21 @@
       letter-spacing: 0.08em;
     }
 
-    .hint-sub {
-      font-size: 10px;
-      color: #9ca3af;
+    /* ✅ 옵션 토글 UI */
+    .mode-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 4px 10px rgba(148, 163, 184, 0.18);
+      font-size: 11px;
+      color: #4b5563;
     }
+    .mode-toggle input { accent-color: #6366f1; }
 
-    /* 결과 헤더 */
     .results-header {
       display: flex;
       justify-content: space-between;
@@ -194,12 +184,6 @@
       color: #9ca3af;
     }
 
-    .results-header span#result-count {
-      font-size: 11px;
-      color: #4b5563;
-    }
-
-    /* 결과 리스트 - 4열 카드 그리드 */
     .result-list {
       flex: 1;
       max-height: calc(100vh - 240px);
@@ -211,18 +195,6 @@
       gap: 10px;
     }
 
-    .result-list::-webkit-scrollbar {
-      width: 6px;
-    }
-    .result-list::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .result-list::-webkit-scrollbar-thumb {
-      background: #c7d2fe;
-      border-radius: 999px;
-    }
-
-    /* 카드 하나 */
     .row {
       background: radial-gradient(circle at top left, #eef2ff, #f9fafb 55%);
       border-radius: 16px;
@@ -254,11 +226,7 @@
       gap: 6px;
     }
 
-    .row-main {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
+    .row-main { display: flex; flex-direction: column; gap: 2px; }
 
     .row-site {
       font-size: 13px;
@@ -268,11 +236,6 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       letter-spacing: -0.01em;
-    }
-
-    .row-sub {
-      font-size: 10px;
-      color: #9ca3af;
     }
 
     .group-badge {
@@ -285,35 +248,12 @@
       background: #f3f4f6;
     }
 
-    .group-jh {
-      border-color: #4f46e5;
-      color: #4338ca;
-      background: #eef2ff;
-    }
+    .group-jh { border-color: #4f46e5; color: #4338ca; background: #eef2ff; }
+    .group-nh { border-color: #16a34a; color: #15803d; background: #ecfdf3; }
+    .group-hty { border-color: #d97706; color: #b45309; background: #fef3c7; }
+    .group-etc { border-color: #9ca3af; color: #4b5563; background: #f3f4f6; }
 
-    .group-nh {
-      border-color: #16a34a;
-      color: #15803d;
-      background: #ecfdf3;
-    }
-
-    .group-hty {
-      border-color: #d97706;
-      color: #b45309;
-      background: #fef3c7;
-    }
-
-    .group-etc {
-      border-color: #9ca3af;
-      color: #4b5563;
-      background: #f3f4f6;
-    }
-
-    .row-body {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 6px;
-    }
+    .row-body { display: flex; flex-wrap: wrap; gap: 4px 6px; }
 
     .field-chip {
       display: inline-flex;
@@ -358,14 +298,8 @@
       transition: background 0.12s ease, color 0.12s ease, transform 0.05s ease;
     }
 
-    .copy-btn:hover {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .copy-btn:active {
-      transform: translateY(1px);
-    }
+    .copy-btn:hover { background: #e5e7eb; color: #111827; }
+    .copy-btn:active { transform: translateY(1px); }
 
     .empty {
       font-size: 12px;
@@ -392,109 +326,62 @@
       z-index: 999;
       box-shadow: 0 10px 26px rgba(15, 23, 42, 0.55);
     }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(-2px); }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(-2px);
-    }
-
-    /* 반응형 */
-    @media (max-width: 960px) {
-      .result-list {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
+    @media (max-width: 960px) { .result-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     @media (max-width: 720px) {
       body { padding: 16px 10px; }
       .app { padding: 16px 14px 14px; max-height: none; }
       header h1 { font-size: 17px; }
-      .result-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        max-height: none;
-      }
+      .result-list { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: none; }
     }
+    @media (max-width: 520px) { body { padding: 12px 8px; } .result-list { grid-template-columns: repeat(1, minmax(0, 1fr)); } }
 
-    @media (max-width: 520px) {
-      body { padding: 12px 8px; }
-      .result-list {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-      }
+    :root{ --page-pad: 18px; --page-max: 1400px; }
+    html, body{ height:100%; }
+    body{
+      padding: var(--page-pad) !important;
+      margin: 0 !important;
+      display: block !important;
     }
-
-    /* ===== ADMIN LAYOUT RULE (ALL PAGES) ===== */
-:root{
-  --page-pad: 18px;
-  --page-max: 1400px;
-}
-
-html, body{
-  height:100%;
-}
-
-body{
-  padding: var(--page-pad) !important;
-  margin: 0 !important;
-  display: block !important;   /* flex center 방지 */
-}
-
-/* 페이지 최상위 래퍼 */
-.container,
-.app-shell{
-  width:100% !important;
-  max-width: var(--page-max) !important;
-  margin: 0 auto !important;
-}
-
-/* 메인 카드/유리판 */
-.card,
-.inner-shell{
-  min-height: calc(100vh - (var(--page-pad) * 2)) !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-/* 결과 영역은 남는 높이 채우기 */
-.table-wrapper,
-.result-card,
-.result-area,
-#tableWrapper{
-  flex: 1 1 auto !important;
-}
-
-/* 페이지마다 다르던 높이 제한 제거 */
-.table-wrapper{
-  max-height: none !important;
-}
-
+    .container, .app-shell{
+      width:100% !important;
+      max-width: var(--page-max) !important;
+      margin: 0 auto !important;
+    }
+    .card, .inner-shell{
+      min-height: calc(100vh - (var(--page-pad) * 2)) !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .table-wrapper, .result-card, .result-area, #tableWrapper{ flex: 1 1 auto !important; }
+    .table-wrapper{ max-height: none !important; }
   </style>
 </head>
 <body>
   <div class="app">
     <header>
       <div>
-        <h1>
-          <span class="icon">🔑</span>
-          <span>계정 조회</span>
-        </h1>
-        <div class="subtitle">
-        </div>
+        <h1><span class="icon">🔑</span><span>계정 조회</span></h1>
+        <div class="subtitle"></div>
       </div>
       <div class="badge">ACCOUNT FINDER</div>
     </header>
 
     <section class="search-section">
       <div class="search-box">
-        <input
-          id="query"
-          type="text"
-          placeholder=""
-        />
+        <input id="query" type="text" placeholder="예) 스마트스토어 / 쿠팡 / 11번가 ..." />
         <button id="searchBtn">검색</button>
       </div>
 
       <div class="hint">
         <span class="pill">SEARCH</span>
+
+        <!-- ✅ 옵션: OR / AND -->
+        <label class="mode-toggle" title="기본은 일부(OR) 일치, 체크하면 모든 키워드(AND) 일치">
+          <input id="matchAll" type="checkbox" />
+          모든 키워드 일치(AND)
+        </label>
       </div>
     </section>
 
@@ -514,14 +401,12 @@ body{
     // -------------------------------------------------------------------
     const SHEET_ID = "1bdGBLki_3CVaq7BDL3u-pQDSZVBD7roeEdsyP-74Lz0";
 
-    // 쇼핑몰 3개 시트 GID
     const SHOP_GIDS = [
-      0,          // jh
-      618725932,  // nh
-      1481873109  // hyt
+      0,          // 시트1 (JH)
+      618725932,  // 시트2 (NH)
+      1481873109  // 시트3 (HTY)
     ];
 
-    // 기타 사이트 시트 GID
     const OTHER_GID = 267581891;
 
     let SHOP_SITES = [];
@@ -533,6 +418,7 @@ body{
     const resultList = document.getElementById("result-list");
     const resultCount = document.getElementById("result-count");
     const toast = document.getElementById("toast");
+    const matchAllToggle = document.getElementById("matchAll");
 
     // -------------------------------------------------------------------
     // CSV 불러오기 & 파싱
@@ -547,19 +433,87 @@ body{
       return parseCsv(text);
     }
 
-    // 단순 CSV 파서 (복잡한 따옴표 케이스는 없다고 가정)
+    // ✅ 따옴표/콤마 포함 CSV 파서 (구글시트 CSV에 적합)
     function parseCsv(text) {
-      const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
-      return lines.map(line => line.split(","));
+      const rows = [];
+      let row = [];
+      let cur = "";
+      let inQuotes = false;
+
+      // \r\n / \n 모두 대응
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const next = text[i + 1];
+
+        if (ch === '"' ) {
+          if (inQuotes && next === '"') { // escaped quote
+            cur += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+          continue;
+        }
+
+        if (!inQuotes && ch === ",") {
+          row.push(cur);
+          cur = "";
+          continue;
+        }
+
+        if (!inQuotes && (ch === "\n" || ch === "\r")) {
+          if (ch === "\r" && next === "\n") i++;
+          row.push(cur);
+          // 빈 줄 제거 (모든 컬럼 빈값이면 스킵)
+          if (row.some(c => (c || "").toString().trim() !== "")) rows.push(row);
+          row = [];
+          cur = "";
+          continue;
+        }
+
+        cur += ch;
+      }
+
+      // last cell
+      if (cur.length > 0 || row.length > 0) {
+        row.push(cur);
+        if (row.some(c => (c || "").toString().trim() !== "")) rows.push(row);
+      }
+
+      return rows;
     }
 
+    // -------------------------------------------------------------------
+    // ✅ AG 키워드 토큰화
+    // - "단어, 단어" 형태를 콤마로 쪼개서 배열로 저장
+    // -------------------------------------------------------------------
+    function splitAgKeywords(agCellValue) {
+      return (agCellValue || "")
+        .toString()
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean);
+    }
+
+    // ✅ 사용자가 입력한 검색어도 키워드로 쪼개기
+    // - 콤마/공백 연속 구분자 처리
+    function splitQueryKeywords(query) {
+      return (query || "")
+        .toString()
+        .split(/[,\s]+/g)
+        .map(s => s.trim())
+        .filter(Boolean);
+    }
+
+    // -------------------------------------------------------------------
     // 🔥 A열이 '매장'인 행은 전체 제외 (모든 시트 공통)
+    // -------------------------------------------------------------------
     async function loadData() {
       resultList.innerHTML = '<div class="empty">데이터 불러오는 중...</div>';
       resultCount.textContent = "";
 
       try {
-        // -------- 1) 쇼핑몰 3개 시트 (JH / NH / HTY) --------
+        // -------- 1) 쇼핑몰 3개 시트 --------
         const shopPromises = SHOP_GIDS.map(gid => fetchCsv(gid));
         const shopSheetsRows = await Promise.all(shopPromises);
 
@@ -579,31 +533,38 @@ body{
             const colA = (cols[0] || "").toString().trim();
             if (colA === "매장") return;
 
-            let siteName = "";
+            // 쇼핑몰명 AG열 (index 32)
+            const ag = cols[32] || "";
+            const agKeywords = splitAgKeywords(ag);
+            if (!agKeywords.length) return;
+
             let storeId = "";
             let loginId = "";
             let pw = "";
 
-            // 사이트명 AG열 (index 32)
-            siteName = cols[32];
-
             if (gid === 0) {
-              // jh: 상점 N, ID O, PW P
-              storeId  = cols[13];
-              loginId  = cols[14];
-              pw       = cols[15];
-            } else if (gid === 618725932 || gid === 1481873109) {
-              // nh / hyt: 상점 M, ID N, PW O
-              storeId  = cols[12];
-              loginId  = cols[13];
-              pw       = cols[14];
+              // 시트1: 상점ID N(13), ID O(14), PW P(15)
+              storeId = cols[13];
+              loginId = cols[14];
+              pw      = cols[15];
+            } else if (gid === 618725932) {
+              // ✅ 시트2: 상점ID N(13), ID O(14), PW P(15)
+              storeId = cols[13];
+              loginId = cols[14];
+              pw      = cols[15];
+            } else if (gid === 1481873109) {
+              // 시트3: 상점ID M(12), ID N(13), PW O(14)
+              storeId = cols[12];
+              loginId = cols[13];
+              pw      = cols[14];
             }
 
-            if (!siteName) return;
-
+            // 표시용 siteName은 원본 AG 문자열 그대로 두되,
+            // 검색은 agKeywords(토큰)로 처리
             SHOP_SITES.push({
               group: groupLabel,
-              siteName: siteName || "",
+              siteName: ag || "",
+              agKeywords,                 // ✅ 검색용 토큰
               storeId: storeId || "",
               loginId: loginId || "",
               pw: pw || ""
@@ -628,6 +589,8 @@ body{
               OTHER_SITES.push({
                 group: "기타",
                 siteName: siteName || "",
+                // 기타는 콤마 키워드 규칙을 동일 적용 (원하면 제거 가능)
+                agKeywords: splitAgKeywords(siteName),
                 loginId: loginId || "",
                 pw: pw || ""
               });
@@ -637,6 +600,7 @@ body{
 
         dataLoaded = true;
         resultList.innerHTML = '<div class="empty"></div>';
+        resultCount.textContent = "0건";
       } catch (e) {
         console.error(e);
         resultList.innerHTML =
@@ -645,20 +609,43 @@ body{
     }
 
     // -------------------------------------------------------------------
-    // 검색 로직 (사이트명 기준 포함 검색)
+    // 검색 로직
+    // - 기본(OR): AG 토큰 중 하나라도, 또는 "입력 키워드 중 하나라도" 매칭되면 노출
+    // - 옵션(AND): 사용자가 입력한 키워드들을 모두 만족해야 노출
     // -------------------------------------------------------------------
     function normalize(str) {
-      return (str || "").toString().toLowerCase();
+      return (str || "").toString().toLowerCase().trim();
     }
 
-    function searchSites(query) {
-      const q = normalize(query);
-      if (!q) return [];
+    // "토큰들" 중에 queryToken이 포함되는지 (부분일치)
+    function tokenMatchAny(agTokens, queryTokens) {
+      const a = (agTokens || []).map(normalize).filter(Boolean);
+      const q = (queryTokens || []).map(normalize).filter(Boolean);
+      if (!a.length || !q.length) return false;
+
+      // OR: queryTokens 중 하나라도 agTokens 중 하나에 포함되면 true
+      return q.some(qt => a.some(at => at.includes(qt)));
+    }
+
+    function tokenMatchAll(agTokens, queryTokens) {
+      const a = (agTokens || []).map(normalize).filter(Boolean);
+      const q = (queryTokens || []).map(normalize).filter(Boolean);
+      if (!a.length || !q.length) return false;
+
+      // AND: 모든 queryToken이 agTokens 어딘가에 포함되어야 true
+      return q.every(qt => a.some(at => at.includes(qt)));
+    }
+
+    function searchSites(query, matchAll) {
+      const queryTokens = splitQueryKeywords(query);
+      if (!queryTokens.length) return [];
 
       const results = [];
 
+      const matcher = matchAll ? tokenMatchAll : tokenMatchAny;
+
       SHOP_SITES.forEach(item => {
-        if (normalize(item.siteName).includes(q)) {
+        if (matcher(item.agKeywords, queryTokens)) {
           results.push({
             group: item.group || "기타",
             siteName: item.siteName || "",
@@ -670,7 +657,7 @@ body{
       });
 
       OTHER_SITES.forEach(item => {
-        if (normalize(item.siteName).includes(q)) {
+        if (matcher(item.agKeywords, queryTokens)) {
           results.push({
             group: item.group || "기타",
             siteName: item.siteName || "",
@@ -681,15 +668,12 @@ body{
         }
       });
 
-      results.sort((a, b) => {
-        return (a.siteName || "").localeCompare(b.siteName || "");
-      });
-
+      results.sort((a, b) => (a.siteName || "").localeCompare(b.siteName || ""));
       return results;
     }
 
     // -------------------------------------------------------------------
-    // 렌더링 (4열 카드형)
+    // 렌더링
     // -------------------------------------------------------------------
     function renderResults(results) {
       if (!results || results.length === 0) {
@@ -705,7 +689,6 @@ body{
         const row = document.createElement("div");
         row.className = "row";
 
-        // 상단: 사이트명 + 그룹
         const header = document.createElement("div");
         header.className = "row-header";
 
@@ -716,12 +699,7 @@ body{
         siteEl.className = "row-site";
         siteEl.textContent = item.siteName || "(사이트명 없음)";
 
-        const subEl = document.createElement("div");
-        subEl.className = "row-sub";
-        subEl.textContent = ""; // 필요하면 부가 정보
-
         main.appendChild(siteEl);
-        main.appendChild(subEl);
 
         const groupWrap = document.createElement("div");
         const group = (item.group || "기타").toUpperCase();
@@ -742,22 +720,15 @@ body{
         header.appendChild(groupWrap);
         row.appendChild(header);
 
-        // 하단: 상점 / ID / PW
         const body = document.createElement("div");
         body.className = "row-body";
 
         const store = (item.storeId || "").toString().trim();
         const hasStore = store !== "" && store !== "-" && store !== "없음";
 
-        if (hasStore) {
-          body.appendChild(makeFieldChip("상점", item.storeId));
-        }
-        if (item.loginId) {
-          body.appendChild(makeFieldChip("ID", item.loginId));
-        }
-        if (item.pw) {
-          body.appendChild(makeFieldChip("PW", item.pw));
-        }
+        if (hasStore) body.appendChild(makeFieldChip("상점", item.storeId));
+        if (item.loginId) body.appendChild(makeFieldChip("ID", item.loginId));
+        if (item.pw) body.appendChild(makeFieldChip("PW", item.pw));
 
         row.appendChild(body);
         frag.appendChild(row);
@@ -828,17 +799,21 @@ body{
         return;
       }
       const q = queryInput.value.trim();
-      const results = searchSites(q);
+      const matchAll = !!matchAllToggle.checked;
+      const results = searchSites(q, matchAll);
       renderResults(results);
     }
 
     queryInput.addEventListener("keydown", e => {
-      if (e.key === "Enter") {
-        doSearch();
-      }
+      if (e.key === "Enter") doSearch();
     });
 
     searchBtn.addEventListener("click", doSearch);
+
+    // ✅ 옵션 바뀌면 즉시 재검색 (입력값이 있으면)
+    matchAllToggle.addEventListener("change", () => {
+      if (queryInput.value.trim()) doSearch();
+    });
 
     window.onload = () => {
       queryInput.focus();
