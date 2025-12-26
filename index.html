@@ -409,8 +409,13 @@
 
     const OTHER_GID = 267581891;
 
+    // ✅ 추가 DB (다른 스프레드시트)
+    const EXTRA_SHEET_ID = "1cAXTlsGoK8FNEZ-7PaR7dfLjykPfCqLOIcyBqqdu3wY";
+    const EXTRA_GID = 1617573679;
+
     let SHOP_SITES = [];
     let OTHER_SITES = [];
+    let EXTRA_SITES = []; // ✅ 추가DB
     let dataLoaded = false;
 
     const queryInput = document.getElementById("query");
@@ -423,12 +428,12 @@
     // -------------------------------------------------------------------
     // CSV 불러오기 & 파싱
     // -------------------------------------------------------------------
-    function csvUrl(gid) {
-      return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}`;
+    function csvUrl(sheetId, gid) {
+      return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
     }
 
-    async function fetchCsv(gid) {
-      const res = await fetch(csvUrl(gid));
+    async function fetchCsv(sheetId, gid) {
+      const res = await fetch(csvUrl(sheetId, gid));
       const text = await res.text();
       return parseCsv(text);
     }
@@ -514,7 +519,7 @@
 
       try {
         // -------- 1) 쇼핑몰 3개 시트 --------
-        const shopPromises = SHOP_GIDS.map(gid => fetchCsv(gid));
+        const shopPromises = SHOP_GIDS.map(gid => fetchCsv(SHEET_ID, gid));
         const shopSheetsRows = await Promise.all(shopPromises);
 
         SHOP_SITES = [];
@@ -575,7 +580,7 @@
         // -------- 2) 기타 시트 --------
         OTHER_SITES = [];
         if (OTHER_GID != null) {
-          const otherRows = await fetchCsv(OTHER_GID);
+          const otherRows = await fetchCsv(SHEET_ID, OTHER_GID);
           if (otherRows.length > 1) {
             otherRows.slice(1).forEach(cols => {
               const colA = (cols[0] || "").toString().trim();
@@ -598,6 +603,37 @@
           }
         }
 
+        // -------- 3) ✅ 추가 DB (전체 셀 기준 검색 / H=ID, I=PW) --------
+        EXTRA_SITES = [];
+        try {
+          const extraRows = await fetchCsv(EXTRA_SHEET_ID, EXTRA_GID);
+          if (extraRows && extraRows.length > 1) {
+            extraRows.slice(1).forEach(cols => {
+              if (!cols || !cols.some(c => (c || "").toString().trim() !== "")) return;
+
+              // 전체 셀 텍스트로 검색
+              const searchText = cols.map(c => (c || "").toString()).join(" ");
+
+              // H열(7)=ID, I열(8)=PW
+              const loginId = cols[7] || "";
+              const pw      = cols[8] || "";
+
+              // 카드 제목(표시용) - 기본은 A열, 없으면 "(추가DB)"
+              const siteName = (cols[0] || "").toString().trim() || "(추가DB)";
+
+              EXTRA_SITES.push({
+                group: "추가DB",
+                siteName,
+                searchText,
+                loginId: loginId || "",
+                pw: pw || ""
+              });
+            });
+          }
+        } catch (e) {
+          console.error("추가 DB 로딩 실패:", e);
+        }
+
         dataLoaded = true;
         resultList.innerHTML = '<div class="empty"></div>';
         resultCount.textContent = "0건";
@@ -610,14 +646,14 @@
 
     // -------------------------------------------------------------------
     // 검색 로직
-    // - 기본(OR): AG 토큰 중 하나라도, 또는 "입력 키워드 중 하나라도" 매칭되면 노출
-    // - 옵션(AND): 사용자가 입력한 키워드들을 모두 만족해야 노출
+    // - 기본(OR): 일부 키워드라도 매칭
+    // - 옵션(AND): 모든 키워드 매칭
     // -------------------------------------------------------------------
     function normalize(str) {
       return (str || "").toString().toLowerCase().trim();
     }
 
-    // "토큰들" 중에 queryToken이 포함되는지 (부분일치)
+    // "토큰들" 중에 queryToken이 포함되는지 (부분일치) - 쇼핑/기타 토큰 기반
     function tokenMatchAny(agTokens, queryTokens) {
       const a = (agTokens || []).map(normalize).filter(Boolean);
       const q = (queryTokens || []).map(normalize).filter(Boolean);
@@ -636,16 +672,31 @@
       return q.every(qt => a.some(at => at.includes(qt)));
     }
 
+    // ✅ 추가DB: 전체 셀 텍스트 기준
+    function textMatchAny(text, queryTokens) {
+      const t = normalize(text);
+      const q = (queryTokens || []).map(normalize).filter(Boolean);
+      if (!t || !q.length) return false;
+      return q.some(qt => t.includes(qt));
+    }
+
+    function textMatchAll(text, queryTokens) {
+      const t = normalize(text);
+      const q = (queryTokens || []).map(normalize).filter(Boolean);
+      if (!t || !q.length) return false;
+      return q.every(qt => t.includes(qt));
+    }
+
     function searchSites(query, matchAll) {
       const queryTokens = splitQueryKeywords(query);
       if (!queryTokens.length) return [];
 
       const results = [];
 
-      const matcher = matchAll ? tokenMatchAll : tokenMatchAny;
+      const tokenMatcher = matchAll ? tokenMatchAll : tokenMatchAny;
 
       SHOP_SITES.forEach(item => {
-        if (matcher(item.agKeywords, queryTokens)) {
+        if (tokenMatcher(item.agKeywords, queryTokens)) {
           results.push({
             group: item.group || "기타",
             siteName: item.siteName || "",
@@ -657,7 +708,21 @@
       });
 
       OTHER_SITES.forEach(item => {
-        if (matcher(item.agKeywords, queryTokens)) {
+        if (tokenMatcher(item.agKeywords, queryTokens)) {
+          results.push({
+            group: item.group || "기타",
+            siteName: item.siteName || "",
+            storeId: "",
+            loginId: item.loginId || "",
+            pw: item.pw || ""
+          });
+        }
+      });
+
+      // ✅ 추가DB 검색(전체 셀 기준)
+      const textMatcher = matchAll ? textMatchAll : textMatchAny;
+      EXTRA_SITES.forEach(item => {
+        if (textMatcher(item.searchText, queryTokens)) {
           results.push({
             group: item.group || "기타",
             siteName: item.siteName || "",
